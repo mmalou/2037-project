@@ -3,13 +3,12 @@ var uriUtil = require('mongodb-uri');
 var mongodbUri = 'mongodb://admin:375yqkTE@ds053638.mongolab.com:53638/interface2037';
 var mongooseUri = uriUtil.formatMongoose(mongodbUri);
 var mongoose = require('mongoose');
-var uriUtil = require('mongodb-uri');
-mongoose.connect(mongooseUri);
 var db = mongoose.connection;
+mongoose.connect(mongooseUri);
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {
-	console.log("connec ok");
+	//console.log("Connection ok");
 });
 
 var schema = mongoose.Schema({ content : 'String', status : 'String', date_creation : 'Date', answer : 'String'});
@@ -23,6 +22,20 @@ module.exports = {
 			if (err) 
 				callback("error");
 			callback(doc)
+		});
+	},
+	clean: function(callback) {
+		Question.remove(function(err) {
+			if (err) 
+				callback("error");
+			callback("ok")
+		});
+	},
+	remove: function(id, callback) {
+		Question.remove({ _id: id }, function(err) {
+			if (err) 
+				callback("error");
+			callback("ok")
 		});
 	},
 	findByContent: function(content, callback) {

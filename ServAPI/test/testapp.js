@@ -1,80 +1,54 @@
-var assert = require("assert"); // node.js core module
-var mongomodel = require("../models/mongomodel.js");
+var app = require('./../app');
+var assert = require("assert");
+var request = require('supertest');
 
+describe('Tests Acceptations', function(){
 
-describe('Array', function(){
-	describe('#indexOf()', function(){
+	// ajout d'une question qui n'existe pas
+	it('Should return a 201 status code', fulnction (done) {
+		request(app)
+			.post('/questions/')
+			.send({ content: questionContent })
+			.expect(201)
+			.end(function (error) {
+				if(error) throw error;
+				done();
+			});
+	});
 
-		// test add
-		it('Should create a question', function(){
-			mongomodel.add("question",function(resultAdd){
-				assert.typeOf(resultAdd._id, 'string');
-				assert.equal("resultAdd",resultAdd.content);
-				assert.equal("resultAdd",resultAdd.status);
-				assert.typeOf(resultAdd.dateCreation,"date");
-				assert.equal("",resultAdd.answer);
-			})
-		})
+	// Récuperation derniere question si il n'y en a pas
+	it('Should return a 204 status code', function (done) {
+		request(app)
+			.get('/questions/last')
+			.expect(204)
+			.end(function (error) {
+				if(error) throw error;
+				done();
+			});
+	});
 
-		// test findbyid
-		it('Should return same question object by id', function(){
-			mongomodel.add("question",function(resultAdd){
-				mongomodel.findById(resultAdd._id,function(resultFind){
-					assert.equal(resultFind._id, resultAdd._id);
-					assert.equal(resultFind.content, resultAdd.content);
-					assert.equal(resultFind.status, resultAdd.status);
-					assert.equal(resultFind.dateCreation, resultAdd.dateCreation);
-					assert.equal(resultFind.answer, resultAdd.answer);
-				})
-			})
-		})
+	// Récuperation derniere question si il y en a
+	it('Should return a 200 status code', function (done) {
+		request(app)
+			.get('/questions/last')
+			.expect(200)
+			.end(function (error) {
+				if(error) throw error;
+				done();
+			});
+	});
 
-		// test findbycontent
-		it('Should return same question object by content', function(){
-			mongomodel.add("question",function(resultAdd){
-				mongomodel.findByContent(resultAdd.content,function(resultFind){
-					assert.equal(resultFind._id, resultAdd._id);
-					assert.equal(resultFind.content, resultAdd.content);
-					assert.equal(resultFind.status, resultAdd.status);
-					assert.equal(resultFind.dateCreation, resultAdd.dateCreation);
-					assert.equal(resultFind.answer, resultAdd.answer);
-				})
-			})
-		})
+	var questionContent = 'contenu question';
 
-		// test getnext
-		it('Should return question with new answer', function(){
-			mongomodel.add("question",function(resultAdd){
-				mongomodel.getnext(function(resultFind){
-					assert.equal(resultFind._id, resultAdd._id);
-					assert.equal(resultFind.content, resultAdd.content);
-					assert.equal(resultFind.status, resultAdd.status);
-					assert.equal(resultFind.dateCreation, resultAdd.dateCreation);
-					assert.equal(resultFind.answer, resultAdd.answer);
-				})
-			})
-		})
-		
-		// test answer
-		it('Should update question answer', function(){
-			mongomodel.add("question",function(resultAdd){
-				mongomodel.answer(resultAdd._id,"reponse",function(resultFind){
-					mongomodel.findById(resultAdd._id,function(resultFind){
-						assert.equal("reponse", resultFind.answer);
-					})
-				})
-			})
-		})
-		
-		// test lock
-		it('Should update question status', function(){
-			mongomodel.add("question",function(resultAdd){
-				mongomodel.lock(resultAdd._id,function(resultFind){
-					mongomodel.findById(resultAdd._id,function(resultFind){
-						assert.equal("in progress", resultFind.status);
-					})
-				})
-			})
-		})
-	})
+	// ajout d'une question qui existe
+	it('Should return a 200 status code', function (done) {
+		request(app)
+			.post('/questions/')
+			.send({ content: questionContent })
+			.expect(200)
+			.end(function (error) {
+				if(error) throw error;
+				done();
+			});
+	});
 });
