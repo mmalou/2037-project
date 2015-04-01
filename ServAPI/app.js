@@ -39,13 +39,13 @@ app.get('/questions/last', function(req, res) {
 
 app.get('/questions/:idquestion', function(req, res) {
 	mongomodel.findById(req.params.idquestion, function(resultFind){
-		console.log("serv");
-		console.log(resultFind);
 		if(resultFind == "error" || resultFind == null){
+			console.log("11");
 			res.statusCode = 404;
 			res.send("Not Found");
 		}
 		else {
+			console.log("12");
 			res.statusCode = 200;
 			res.send(resultFind);
 		}
@@ -72,11 +72,10 @@ app.post('/questions/', function(req, res) {
 	mongomodel.findByContent(questionContent,function(resultFind){
 		if(resultFind == "error"){
 			res.statusCode = 500;
-			res.send(resultFind);
+			res.send("Internal Server Error");
 		}
 		else{
 			if(resultFind == undefined){
-				console.log("3");
 				mongomodel.add(questionContent,function(resultAdd){
 					if (resultAdd == "error") {
 						res.statusCode = 500;

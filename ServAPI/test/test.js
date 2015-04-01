@@ -5,7 +5,7 @@ var mongomodel = require("../models/mongomodel.js");
 
 describe('Tests Unitaires', function(){
 
-	mongomodel.clean();
+	mongomodel.clean(function(resultFind){});
 	
 	var question;
 	
@@ -60,22 +60,21 @@ describe('Tests Unitaires', function(){
 		})
 	})
 	
+	// test lock
+	it('Should update question status', function(done){
+		mongomodel.lock(question.id,function(resultFind){
+			mongomodel.findById(question.id,function(resultFind){
+				assert.equal("in progress", resultFind.status);
+				done();
+			})
+		})
+	})
 	
 	// test answer
 	it('Should update question answer', function(done){
 		mongomodel.answer(question.id,"reponse",function(resultFind){
 			mongomodel.findById(question.id,function(resultFind){
 				assert.equal("reponse", resultFind.answer);
-				done();
-			})
-		})
-	})
-	
-	// test lock
-	it('Should update question status', function(done){
-		mongomodel.lock(question.id,function(resultFind){
-			mongomodel.findById(question.id,function(resultFind){
-				assert.equal("in progress", resultFind.status);
 				done();
 			})
 		})

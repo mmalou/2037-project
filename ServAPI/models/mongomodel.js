@@ -20,44 +20,44 @@ module.exports = {
 		var newQuestion = new Question({ content : content , status : 'waiting', date_creation : datetime, answer : ''});
 		newQuestion.save(function (err,doc) {
 			if (err) 
-				callback("error");
-			callback(doc)
+				return callback("error");
+			return callback(doc)
 		});
 	},
 	clean: function(callback) {
 		Question.remove(function(err) {
 			if (err) 
-				callback("error");
-			callback("ok")
+				return callback("error");
+			return callback("ok")
 		});
 	},
 	remove: function(id, callback) {
 		Question.remove({ _id: id }, function(err) {
 			if (err) 
-				callback("error");
-			callback("ok")
+				return callback("error");
+			return callback("ok")
 		});
 	},
 	findByContent: function(content, callback) {
 		Question.find({ content : content }, function (err, doc){
 			if (err) 
-				callback("error");
-			callback(doc[0]);
+				return callback("error");
+			return callback(doc[0]);
 		});
 	},
 	findById: function(id, callback) {
 		Question.findById(id, function (err, doc){
 			if (err) 
-				callback("error");
-			callback(doc);
+				return callback("error");
+			return callback(doc);
 		});
 	},
 	getNext: function(callback) {
-		var query = Question.find({ status : "waiting" }).limit(1).sort([['date_creation', 'descending']]);
+		var query = Question.find({ status : "waiting" }).limit(1).sort([['date_creation', 'ascending']]);
 		query.exec(function(err, doc) {
 			if(err)
-				callback("error");
-			callback(doc[0]);
+				return callback("error");
+			return callback(doc[0]);
 		});
 	},
 	answer: function(id, answer, callback) {
@@ -67,8 +67,8 @@ module.exports = {
 		Question.update(idQuestion, update, options_update, callback_update);
 		function callback_update (err, numAffected) {
 			if(err || numAffected == 0)
-				callback("error");
-			callback("ok");
+				return callback("error");
+			return callback("ok");
 		}
 	},
 	lock: function(id, callback) {
@@ -78,8 +78,8 @@ module.exports = {
 		Question.update(idQuestion, update, options_update, callback_update);
 		function callback_update (err, numAffected) {
 			if(err || numAffected == 0)
-				callback("error");
+				return callback("error");
+			return callback("ok");
 		}
-		callback("ok");
 	},
 };

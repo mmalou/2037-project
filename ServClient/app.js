@@ -67,7 +67,7 @@ app.get('/Client/:idquestion', function(req, res) {
 	});
 });
 
-app.get('/SystemExpert/clean', function(req, res) {	
+app.get('/SystemeExpert/clean', function(req, res) {	
 	var options = {
 		method: 'delete',
 		url:path+'/questions/'
