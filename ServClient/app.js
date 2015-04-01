@@ -32,7 +32,7 @@ app.post('/Client/Envoi', function(req, res) {
 	request(options, function (err, httpResponse, body) {
 		if (!err){
 			if (httpResponse.statusCode == 201 || httpResponse.statusCode == 200 ) {
-				res.render('FormClientSent.ejs', {urlQuestion: "http://localhost:8080/Client/"+JSON.parse(body)});	
+				res.render('FormClientSent.ejs', {urlQuestion: "http://localhost:8080/Client/"+body});	
 			}
 			else {
 				res.render('ErrorPage.ejs', { error: httpResponse.statusCode, errorContent: body });
@@ -50,8 +50,6 @@ app.get('/Client/:idquestion', function(req, res) {
 	
 	request(options, function (err, httpResponse, body) {
 		if (!err && httpResponse.statusCode == 200) {
-			console.log("client");
-			console.log(body);
 			var results = JSON.parse(body);
 			var stringQuestion = "Question : "+results.content;
 			if(results.status == "waiting" || results.status == "in progress"){
@@ -90,7 +88,6 @@ app.get('/SystemeExpert', function(req, res) {
 	request(options, function (err, httpResponse, body) {
 		if (!err) {
 			if(httpResponse.statusCode == 200){
-				console.log("200");
 				var results = JSON.parse(body);
 				res.render('SystemeExpert.ejs', {idQuestion: results._id, question: results.content});
 			}

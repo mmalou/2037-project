@@ -69,29 +69,30 @@ app.put('/questions/:idQuestion', function(req, res) {
 
 app.post('/questions/', function(req, res) {
 	var questionContent = req.body.content;
-	
 	mongomodel.findByContent(questionContent,function(resultFind){
-		if(resultFind == "error" || resultFind == null){
+		if(resultFind == "error"){
 			res.statusCode = 500;
-			res.send("Internal Server Error");
+			res.send(resultFind);
 		}
 		else{
 			if(resultFind == undefined){
+				console.log("3");
 				mongomodel.add(questionContent,function(resultAdd){
 					if (resultAdd == "error") {
 						res.statusCode = 500;
 						res.send();
 					}
 					else {
-					res.statusCode = 201;
-					res.send(resultAdd._id);
+						res.statusCode = 201;
+						res.send(resultAdd.id);
 					}
 				});
 			}
 			else
 			{
+				console.log("6");
 				res.statusCode = 200;
-				res.send(resultFind._id);
+				res.send(resultFind.id);
 			}
 		}
 	});
@@ -111,7 +112,7 @@ app.delete('/questions/:idQuestion', function(req, res) {
 });
 
 app.delete('/questions/', function(req, res) {
-	mongomodel.remove(function(resultFind){
+	mongomodel.clean(function(resultFind){
 		if(resultFind == "error" || resultFind == null){
 			res.statusCode = 400;
 			res.send(resultFind);

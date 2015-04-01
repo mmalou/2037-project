@@ -11,13 +11,12 @@ describe('Tests Unitaires', function(){
 	
 	// test add
 	it('Should create a question', function(done){
-		mongomodel.add("question TEST",function(resultAdd){
+		mongomodel.add("question",function(resultAdd){
 			assert.typeOf(resultAdd.id, "string");;
-			assert.equal("question TEST", resultAdd.content);
+			assert.equal("question", resultAdd.content);
 			assert.equal("waiting",resultAdd.status);
 			assert.typeOf(resultAdd.date_creation,"date");
 			assert.equal("",resultAdd.answer);
-			questionId = resultAdd.id;
 			question = resultAdd;
 			done();
 		})

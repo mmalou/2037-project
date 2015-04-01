@@ -5,7 +5,7 @@ var request = require('supertest');
 describe('Tests Acceptations', function(){
 
 	// ajout d'une question qui n'existe pas
-	it('Should return a 201 status code', fulnction (done) {
+	it('Should return a 201 status code', function (done) {
 		request(app)
 			.post('/questions/')
 			.send({ content: questionContent })
