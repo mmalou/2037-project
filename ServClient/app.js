@@ -32,7 +32,22 @@ app.post('/Client/Envoi', function(req, res) {
 	request(options, function (err, httpResponse, body) {
 		if (!err){
 			if (httpResponse.statusCode == 201 || httpResponse.statusCode == 200 ) {
-				res.render('FormClientSent.ejs', {urlQuestion: "http://localhost:8080/Client/"+body});	
+				var optionsGet= {
+					method: 'get',
+					url: httpResponse.headers.location
+				};
+				
+				request(optionsGet, function (err, httpResponse, body) {
+					if (!err && httpResponse.statusCode == 200) {
+						var results = JSON.parse(body);
+						res.render('FormClientSent.ejs', {urlQuestion: "http://localhost:8080/Client/"+results._id});			
+					}
+					else{
+						res.render('ErrorPage.ejs', { error: httpResponse.statusCode, errorContent: body });
+					}
+					
+				});
+				
 			}
 			else {
 				res.render('ErrorPage.ejs', { error: httpResponse.statusCode, errorContent: body });
@@ -89,11 +104,10 @@ app.get('/SystemeExpert', function(req, res) {
 		if (!err) {
 			if(httpResponse.statusCode == 200){
 				var results = JSON.parse(body);
-				res.render('SystemeExpert.ejs', {idQuestion: results._id, question: results.content});
+				res.render('SystemeExpert.ejs', {urlQuestion: httpResponse.headers.location, question: results.content});
 			}
 			else if(httpResponse.statusCode == 204){
-				console.log("204");
-				res.render('SystemeExpert.ejs', {idQuestion: "noQuestion" , question: ""});
+				res.render('SystemeExpert.ejs', {urlQuestion: "noQuestion" , question: ""});
 			}
 		}
 		else {
@@ -105,9 +119,9 @@ app.get('/SystemeExpert', function(req, res) {
 app.post('/SystemeExpert/Envoi', function(req, res) {
 	var data = { answer: req.body.answer };
 	var options = {
-		method: 'put',
+		method: 'post',
 		form: data,
-		url:path+'/questions/'+req.body.idQuestion
+		url: req.body.urlQuestion
 	};
 	
 	request(options, function (err, httpResponse, body) {

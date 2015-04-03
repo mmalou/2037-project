@@ -26,10 +26,10 @@
 		<h1>Répondre à une question</h1>
 		
 		
-		<% if (idQuestion != "noQuestion") { %>
+		<% if (urlQuestion != "noQuestion") { %>
 			<div id='form_wrap'>
 				<form method="POST" id="contact-form" action="/SystemeExpert/Envoi">
-					<input type="hidden" name="idQuestion" value="<%= idQuestion %>"/>
+					<input type="hidden" name="urlQuestion" value="<%= urlQuestion %>"/>
 					<p id="formstatus"></p>
 					<p>Question : </p>
 					<p><%= question %></p>

@@ -17,6 +17,11 @@ app.get('/questions/last', function(req, res) {
 		}
 		else{
 			mongomodel.lock(resultFind._id,function(resultLock){
+				/*
+				boolean rep = false;
+				setTimeout(function() {
+					mongomodel.unlock(resultFind._id,function(resultLock){
+				}, 60000);*/
 				if(resultFind == "error"){
 					res.statusCode = 500;
 					res.send("Internal Server Error");
@@ -29,7 +34,8 @@ app.get('/questions/last', function(req, res) {
 					}
 					else{
 						res.statusCode = 200;
-						res.send(resultFind); // pas besoin de renvoyé ça nn ?
+						res.location("http://localhost:8081/questions/"+resultFind.id);
+						res.send();
 					}
 				}
 			});
@@ -40,19 +46,17 @@ app.get('/questions/last', function(req, res) {
 app.get('/questions/:idquestion', function(req, res) {
 	mongomodel.findById(req.params.idquestion, function(resultFind){
 		if(resultFind == "error" || resultFind == null){
-			console.log("11");
 			res.statusCode = 404;
 			res.send("Not Found");
 		}
 		else {
-			console.log("12");
 			res.statusCode = 200;
 			res.send(resultFind);
 		}
 	});
 });
 
-app.put('/questions/:idQuestion', function(req, res) {
+app.post('/questions/:idQuestion', function(req, res) {
 	var questionAnswer = req.body.answer;
 	mongomodel.answer(req.params.idQuestion,questionAnswer,function(resultFind){
 		if(resultFind == "error" || resultFind == null){
@@ -83,15 +87,16 @@ app.post('/questions/', function(req, res) {
 					}
 					else {
 						res.statusCode = 201;
-						res.send(resultAdd.id);
+						res.location("http://localhost:8081/questions/"+resultAdd.id);
+						res.send();
 					}
 				});
 			}
 			else
 			{
-				console.log("6");
 				res.statusCode = 200;
-				res.send(resultFind.id);
+				res.location("http://localhost:8081/questions/"+resultFind.id);
+				res.send();
 			}
 		}
 	});
