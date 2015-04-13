@@ -12,7 +12,7 @@ describe('Tests Unitaires', function(){
 	// test add
 	it('Should create a question', function(done){
 		mongomodel.add("question",function(resultAdd){
-			assert.typeOf(resultAdd.id, "string");;
+			assert.typeOf(resultAdd.id, "string");
 			assert.equal("question", resultAdd.content);
 			assert.equal("waiting",resultAdd.status);
 			assert.typeOf(resultAdd.date_creation,"date");

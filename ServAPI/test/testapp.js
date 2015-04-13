@@ -1,11 +1,13 @@
 var app = require('./../app');
-var assert = require("assert");
+var chai = require('chai');
+var assert = chai.assert;
 var request = require('supertest');
 
 describe('Tests Acceptations', function(){
 
-	var questionId;
 	var questionContent = "question A";
+	var location;
+	var questionAnswer = "reponse";
 	
 	// Ajout d'une question qui n'existe pas
 	it('Should return StatusCode 201 when adding a non-existing question', function (done) {
@@ -14,19 +16,28 @@ describe('Tests Acceptations', function(){
 			.send({ content: questionContent })
 			.expect(201)
 			.end(function (error, res) {
-				
-				questionId = res.text;
+				var regex = "\/questions\/[a-zA-Z0-9]*";
+				location = res.headers.location.match(regex)[0];
+				request(app)
+					.get(location)
+					.expect(200)
+					.end(function (error, res) {
+						if(error) throw error;
+					});
 				if(error) throw error;
 				done();
 			});
 	});
 	
-	// Consulter une question avec l'id
-	it('Should return StatusCode 200 when asking a question with id', function (done) {
+	// Consulter une question non répondue
+	it('Should return StatusCode 200 when asking an unanswered question', function (done) {
 		request(app)
-			.get('/questions/'+questionId)
+			.get(location)
 			.expect(200)
 			.end(function (error, res) {
+				assert(res.body.content == questionContent);
+				assert.typeOf(res.body.status, "string");
+				assert(res.body.answer == "");
 				if(error) throw error;
 				done();
 			});
@@ -37,7 +48,15 @@ describe('Tests Acceptations', function(){
 		request(app)
 			.get('/questions/last')
 			.expect(200)
-			.end(function (error) {
+			.end(function (error, res) {
+				var regex = "\/questions\/[a-zA-Z0-9]*";
+				location = res.headers.location.match(regex)[0];
+				request(app)
+					.get(location)
+					.expect(200)
+					.end(function (error, res) {
+						if(error) throw error;
+					});
 				if(error) throw error;
 				done();
 			});
@@ -49,7 +68,15 @@ describe('Tests Acceptations', function(){
 			.post('/questions/')
 			.send({ content: questionContent })
 			.expect(200)
-			.end(function (error) {
+			.end(function (error, res) {
+				var regex = "\/questions\/[a-zA-Z0-9]*";
+				location = res.headers.location.match(regex)[0];
+				request(app)
+					.get(location)
+					.expect(200)
+					.end(function (error, res) {
+						if(error) throw error;
+					});		
 				if(error) throw error;
 				done();
 			});
@@ -58,8 +85,8 @@ describe('Tests Acceptations', function(){
 	// Réponse à une question
 	it('Should return StatusCode 200 when updating question answer', function (done) {
 		request(app)
-			.put('/questions/'+questionId)
-			.send({ answer: "reponse" })
+			.post(location)
+			.send({ answer: questionAnswer })
 			.expect(200)
 			.end(function (error) {
 				if(error) throw error;
@@ -67,10 +94,24 @@ describe('Tests Acceptations', function(){
 			});
 	});
 	
+	// Consulter une question répondue
+	it('Should return StatusCode 200 when asking an answered question', function (done) {
+		request(app)
+			.get(location)
+			.expect(200)
+			.end(function (error, res) {
+				assert(res.body.content == questionContent);
+				assert.typeOf(res.body.status, "string");
+				assert(res.body.answer == questionAnswer);
+					if(error) throw error;
+				done();
+			});
+	});
+	
 	// Remove la question
 	it('Should return StatusCode 200 when removing a question', function (done) {
 		request(app)
-			.delete('/questions/'+questionId)
+			.delete(location)
 			.send()
 			.expect(200)
 			.end(function (error) {

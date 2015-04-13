@@ -32,22 +32,11 @@ app.post('/Client/Envoi', function(req, res) {
 	request(options, function (err, httpResponse, body) {
 		if (!err){
 			if (httpResponse.statusCode == 201 || httpResponse.statusCode == 200 ) {
-				var optionsGet= {
-					method: 'get',
-					url: httpResponse.headers.location
-				};
-				
-				request(optionsGet, function (err, httpResponse, body) {
-					if (!err && httpResponse.statusCode == 200) {
-						var results = JSON.parse(body);
-						res.render('FormClientSent.ejs', {urlQuestion: "http://localhost:8080/Client/"+results._id});			
-					}
-					else{
-						res.render('ErrorPage.ejs', { error: httpResponse.statusCode, errorContent: body });
-					}
-					
-				});
-				
+				var regex = "questions\/[a-zA-Z0-9]*";
+				var regex2 = "\/[a-zA-Z0-9]*";
+				var id = httpResponse.headers.location.match(regex)[0];
+				id = id.match(regex2)[0];
+				res.render('FormClientSent.ejs', {urlQuestion: "http://localhost:8080/Client"+id});			
 			}
 			else {
 				res.render('ErrorPage.ejs', { error: httpResponse.statusCode, errorContent: body });
@@ -103,8 +92,14 @@ app.get('/SystemeExpert', function(req, res) {
 	request(options, function (err, httpResponse, body) {
 		if (!err) {
 			if(httpResponse.statusCode == 200){
-				var results = JSON.parse(body);
-				res.render('SystemeExpert.ejs', {urlQuestion: httpResponse.headers.location, question: results.content});
+				var optionsGet = {
+					method: 'get',
+					url:httpResponse.headers.location
+				};
+				request(optionsGet, function (errGet, httpResponseGet, bodyGet) {
+					var results = JSON.parse(bodyGet);
+					res.render('SystemeExpert.ejs', {urlQuestion: httpResponse.headers.location, question: results.content});
+				});
 			}
 			else if(httpResponse.statusCode == 204){
 				res.render('SystemeExpert.ejs', {urlQuestion: "noQuestion" , question: ""});
@@ -118,6 +113,9 @@ app.get('/SystemeExpert', function(req, res) {
 
 app.post('/SystemeExpert/Envoi', function(req, res) {
 	var data = { answer: req.body.answer };
+	if(req.body.submitno != null)
+		data = { answer: "Pas de réponse connue" };
+		
 	var options = {
 		method: 'post',
 		form: data,

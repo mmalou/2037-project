@@ -50,8 +50,9 @@ app.get('/questions/:idquestion', function(req, res) {
 			res.send("Not Found");
 		}
 		else {
+			var sortObject = {content: resultFind.content, status: resultFind.status, answer: resultFind.answer}
 			res.statusCode = 200;
-			res.send(resultFind);
+			res.send(sortObject);
 		}
 	});
 });
@@ -70,6 +71,18 @@ app.post('/questions/:idQuestion', function(req, res) {
 	});
 });
 
+app.delete('/questions/:idQuestion', function(req, res) {
+	mongomodel.remove(req.params.idQuestion,function(resultFind){
+		if(resultFind == "error" || resultFind == null){
+			res.statusCode = 400;
+			res.send(resultFind);
+		}
+		else{
+			res.statusCode = 200;
+			res.send(resultFind);
+		}
+	});
+});
 
 app.post('/questions/', function(req, res) {
 	var questionContent = req.body.content;
@@ -98,19 +111,6 @@ app.post('/questions/', function(req, res) {
 				res.location("http://localhost:8081/questions/"+resultFind.id);
 				res.send();
 			}
-		}
-	});
-});
-
-app.delete('/questions/:idQuestion', function(req, res) {
-	mongomodel.remove(req.params.idQuestion,function(resultFind){
-		if(resultFind == "error" || resultFind == null){
-			res.statusCode = 400;
-			res.send(resultFind);
-		}
-		else{
-			res.statusCode = 200;
-			res.send(resultFind);
 		}
 	});
 });

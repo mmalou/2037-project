@@ -24,8 +24,6 @@
 <body>
 	<div id="wrap">
 		<h1>Répondre à une question</h1>
-		
-		
 		<% if (urlQuestion != "noQuestion") { %>
 			<div id='form_wrap'>
 				<form method="POST" id="contact-form" action="/SystemeExpert/Envoi">
@@ -37,9 +35,10 @@
 					<label for="answer">Votre réponse : </label>
 					<textarea  name="answer" value="Your Message" id="message" ></textarea>
 					<input type="submit" name="submit" value="Envoyer" />
+					<input type="submit" name="submitno" value="Pas de réponse" />
 				</form>
 			</div>
-		<% } else{  %>
+		<% } else { %>
 			<div id='sent_wrap'>
 				<form id="contact-form">
 					<p><strong>Pas de question</strong></p>
