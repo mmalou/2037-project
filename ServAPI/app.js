@@ -86,31 +86,15 @@ app.delete('/questions/:idQuestion', function(req, res) {
 
 app.post('/questions/', function(req, res) {
 	var questionContent = req.body.content;
-	mongomodel.findByContent(questionContent,function(resultFind){
-		if(resultFind == "error"){
+	mongomodel.add(questionContent,function(resultAdd){
+		if (resultAdd == "error") {
 			res.statusCode = 500;
-			res.send("Internal Server Error");
+			res.send();
 		}
-		else{
-			if(resultFind == undefined){
-				mongomodel.add(questionContent,function(resultAdd){
-					if (resultAdd == "error") {
-						res.statusCode = 500;
-						res.send();
-					}
-					else {
-						res.statusCode = 201;
-						res.location("http://localhost:8081/questions/"+resultAdd.id);
-						res.send();
-					}
-				});
-			}
-			else
-			{
-				res.statusCode = 200;
-				res.location("http://localhost:8081/questions/"+resultFind.id);
-				res.send();
-			}
+		else {
+			res.statusCode = 201;
+			res.location("http://localhost:8081/questions/"+resultAdd.id);
+			res.send();
 		}
 	});
 });

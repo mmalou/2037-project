@@ -62,26 +62,6 @@ describe('Tests Acceptations', function(){
 			});
 	});
 	
-	// Ajout d'une question qui existe
-	it('Should return StatusCode 200 when adding an existing question', function (done) {
-		request(app)
-			.post('/questions/')
-			.send({ content: questionContent })
-			.expect(200)
-			.end(function (error, res) {
-				var regex = "\/questions\/[a-zA-Z0-9]*";
-				location = res.headers.location.match(regex)[0];
-				request(app)
-					.get(location)
-					.expect(200)
-					.end(function (error, res) {
-						if(error) throw error;
-					});		
-				if(error) throw error;
-				done();
-			});
-	});
-	
 	// Réponse à une question
 	it('Should return StatusCode 200 when updating question answer', function (done) {
 		request(app)

@@ -8,7 +8,7 @@ mongoose.connect(mongooseUri);
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {
-	console.log("Connection ok");
+	//console.log("Connection ok");
 });
 
 var schema = mongoose.Schema({ content : 'String', status : 'String', date_creation : 'Date', answer : 'String'});

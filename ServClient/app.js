@@ -31,7 +31,7 @@ app.post('/Client/Envoi', function(req, res) {
 	
 	request(options, function (err, httpResponse, body) {
 		if (!err){
-			if (httpResponse.statusCode == 201 || httpResponse.statusCode == 200 ) {
+			if (httpResponse.statusCode == 201) {
 				var regex = "questions\/[a-zA-Z0-9]*";
 				var regex2 = "\/[a-zA-Z0-9]*";
 				var id = httpResponse.headers.location.match(regex)[0];
