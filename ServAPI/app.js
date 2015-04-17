@@ -40,7 +40,7 @@ app.post('/questions/:idQuestion', function(req, res) {
 		}
 		else{
 			res.statusCode = 200;
-			res.send(resultFind);
+			res.send();
 		}
 	});
 });
