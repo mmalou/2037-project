@@ -53,17 +53,17 @@ app.get('/Client/:idquestion', function(req, res) {
 	};
 	
 	request(options, function (err, httpResponse, body) {
-		if (!err && httpResponse.statusCode == 200) {
+		var stringQuestion;
+		if(httpResponse.statusCode == 204) {
+			console.log(204);
+			var stringReponse = "Pas de réponse pour le moment !";
+			res.render('ConsultQuestion.ejs', {question: "", reponse: stringReponse});
+		}
+		else if (!err && httpResponse.statusCode == 200) {
 			var results = JSON.parse(body);
-			var stringQuestion = "Question : "+results.content;
-			if(results.status == "waiting" || results.status == "in progress"){
-				var stringReponse = "Pas de réponse pour le moment !";
-				res.render('ConsultQuestion.ejs', {question: stringQuestion, reponse: stringReponse});
-			}
-			else{
-				var stringReponse = "Réponse : "+results.answer;
-				res.render('ConsultQuestion.ejs', {question: stringQuestion, reponse: stringReponse});
-			}			
+			stringQuestion = "Question : "+results.content;
+			var stringReponse = "Réponse : "+results.answer;
+			res.render('ConsultQuestion.ejs', {question: stringQuestion, reponse: stringReponse});		
 		}
 		else{
 			res.render('ErrorPage.ejs', { error: httpResponse.statusCode, errorContent: body });
@@ -92,14 +92,8 @@ app.get('/SystemeExpert', function(req, res) {
 	request(options, function (err, httpResponse, body) {
 		if (!err) {
 			if(httpResponse.statusCode == 200){
-				var optionsGet = {
-					method: 'get',
-					url:httpResponse.headers.location
-				};
-				request(optionsGet, function (errGet, httpResponseGet, bodyGet) {
-					var results = JSON.parse(bodyGet);
-					res.render('SystemeExpert.ejs', {urlQuestion: httpResponse.headers.location, question: results.content});
-				});
+				var results = JSON.parse(body);
+				res.render('SystemeExpert.ejs', {urlQuestion: httpResponse.headers.location, question: results.content});
 			}
 			else if(httpResponse.statusCode == 204){
 				res.render('SystemeExpert.ejs', {urlQuestion: "noQuestion" , question: ""});

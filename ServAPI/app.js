@@ -16,9 +16,17 @@ app.get('/questions/:idquestion', function(req, res) {
 			res.send("Not Found");
 		}
 		else {
-			var sortObject = {content: resultFind.content, status: resultFind.status, answer: resultFind.answer}
-			res.statusCode = 200;
-			res.send(sortObject);
+			if(resultFind.status == "waiting" || resultFind.status == "in progress") {
+				console.log(204);
+				res.statusCode = 204;
+				res.send();
+			}
+			else {
+				console.log(200);
+				var sortObject = {content: resultFind.content, status: resultFind.status, answer: resultFind.answer}
+				res.statusCode = 200;
+				res.send(sortObject);
+			}
 		}
 	});
 });
@@ -62,16 +70,16 @@ app.get('/questions/', function(req, res) {
 					res.statusCode = 500;
 					res.send("Internal Server Error");
 				}
-				else{
-					
+				else {
 					if(resultFind == "undefined") {
 						res.statusCode = 204;
 						res.send();
 					}
 					else{
+						var sortObject = {content: resultFind.content}
 						res.statusCode = 200;
 						res.location("http://localhost:8081/questions/"+resultFind.id);
-						res.send();
+						res.send(sortObject);
 					}
 				}
 			});
