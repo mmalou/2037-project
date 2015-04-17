@@ -20,7 +20,7 @@ describe('Tests Acceptations', function(){
 				location = res.headers.location.match(regex)[0];
 				request(app)
 					.get(location)
-					.expect(200)
+					.expect(204)
 					.end(function (error, res) {
 						if(error) throw error;
 					});
@@ -30,14 +30,11 @@ describe('Tests Acceptations', function(){
 	});
 	
 	// Consulter une question non répondue
-	it('Should return StatusCode 200 when asking an unanswered question', function (done) {
+	it('Should return StatusCode 204 when asking an unanswered question', function (done) {
 		request(app)
 			.get(location)
-			.expect(200)
+			.expect(204)
 			.end(function (error, res) {
-				assert(res.body.content == questionContent);
-				assert.typeOf(res.body.status, "string");
-				assert(res.body.answer == "");
 				if(error) throw error;
 				done();
 			});
@@ -50,10 +47,9 @@ describe('Tests Acceptations', function(){
 			.expect(200)
 			.end(function (error, res) {
 				var regex = "\/questions\/[a-zA-Z0-9]*";
-				location = res.headers.location.match(regex)[0];
 				request(app)
 					.get(location)
-					.expect(200)
+					.expect(204)
 					.end(function (error, res) {
 						if(error) throw error;
 					});
