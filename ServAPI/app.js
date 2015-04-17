@@ -9,7 +9,10 @@ var mongomodel = require(__dirname +"/models/mongomodel.js");
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
+var path = "http://localhost:8081/";
+
 app.get('/questions/:idquestion', function(req, res) {
+		console.log("1");
 	mongomodel.findById(req.params.idquestion, function(resultFind){
 		if(resultFind == "error" || resultFind == null){
 			res.statusCode = 404;
@@ -32,7 +35,10 @@ app.get('/questions/:idquestion', function(req, res) {
 });
 
 app.post('/questions/:idQuestion', function(req, res) {
+	console.log("answer");
 	var questionAnswer = req.body.answer;
+	console.log("answer");
+	console.log(questionAnswer);
 	mongomodel.answer(req.params.idQuestion,questionAnswer,function(resultFind){
 		if(resultFind == "error" || resultFind == null){
 			res.statusCode = 500;
@@ -46,6 +52,7 @@ app.post('/questions/:idQuestion', function(req, res) {
 });
 
 app.delete('/questions/:idQuestion', function(req, res) {
+		console.log("2");
 	mongomodel.remove(req.params.idQuestion,function(resultFind){
 		if(resultFind == "error" || resultFind == null){
 			res.statusCode = 400;
@@ -59,6 +66,7 @@ app.delete('/questions/:idQuestion', function(req, res) {
 });
 
 app.get('/questions/', function(req, res) {
+		console.log("3");
 	mongomodel.getNext(function(resultFind){
 		if(typeof resultFind == 'undefined' || resultFind == null) {
 			res.statusCode = 204;
@@ -78,7 +86,7 @@ app.get('/questions/', function(req, res) {
 					else{
 						var sortObject = {content: resultFind.content}
 						res.statusCode = 200;
-						res.location("http://localhost:8081/questions/"+resultFind.id);
+						res.location(path+"questions/"+resultFind.id);
 						res.send(sortObject);
 					}
 				}
@@ -88,6 +96,7 @@ app.get('/questions/', function(req, res) {
 });
 
 app.post('/questions/', function(req, res) {
+		console.log("4");
 	var questionContent = req.body.content;
 	mongomodel.add(questionContent,function(resultAdd){
 		if (resultAdd == "error") {
@@ -96,13 +105,14 @@ app.post('/questions/', function(req, res) {
 		}
 		else {
 			res.statusCode = 201;
-			res.location("http://localhost:8081/questions/"+resultAdd.id);
+			res.location(path+"questions/"+resultAdd.id);
 			res.send();
 		}
 	});
 });
 
 app.delete('/questions/', function(req, res) {
+		console.log("5");
 	mongomodel.clean(function(resultFind){
 		if(resultFind == "error" || resultFind == null){
 			res.statusCode = 400;

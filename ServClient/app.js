@@ -14,6 +14,7 @@ app.use("/views/js",express.static(__dirname + "/views/js"));
 app.use("/views/styles",express.static(__dirname + "/views/styles"));
 
 var path = "http://localhost:8081";
+var pathClient = "http://localhost:8080";
 
 // Form a remplir pour envoyer la question
 app.get('/Client', function(req, res) {
@@ -36,7 +37,7 @@ app.post('/Client/Envoi', function(req, res) {
 				var regex2 = "\/[a-zA-Z0-9]*";
 				var id = httpResponse.headers.location.match(regex)[0];
 				id = id.match(regex2)[0];
-				res.render('FormClientSent.ejs', {urlQuestion: "http://localhost:8080/Client"+id});			
+				res.render('FormClientSent.ejs', {urlQuestion: pathClient+"/Client"+id});			
 			}
 			else {
 				res.render('ErrorPage.ejs', { error: httpResponse.statusCode, errorContent: body });
@@ -110,6 +111,9 @@ app.post('/SystemeExpert/Envoi', function(req, res) {
 	if(req.body.submitno != null)
 		data = { answer: "Pas de réponse connue" };
 		
+	console.log(data);
+	console.log(req.body.urlQuestion);
+	
 	var options = {
 		method: 'post',
 		form: data,

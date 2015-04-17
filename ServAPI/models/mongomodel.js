@@ -62,6 +62,7 @@ module.exports = {
 	},
 	answer: function(id, answer, callback) {
 		var idQuestion = { _id : id };
+		console.log(idQuestion);
 		var update = { status : "answered", answer : answer };
 		var options_update;
 		Question.update(idQuestion, update, options_update, callback_update);
