@@ -112,10 +112,10 @@ describe('Tests Acceptations', function(){
 	});
 	
 	// Bad request
-	it('Should return StatusCode 404 when sending bad url', function (done) {
+	it('Should return StatusCode 400 when sending bad url', function (done) {
 		request(app)
-			.get('/questions/badurl')
-			.expect(404)
+			.get('/badurl')
+			.expect(400)
 			.end(function (error) {
 				if(error) throw error;
 				done();
