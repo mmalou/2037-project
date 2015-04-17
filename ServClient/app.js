@@ -56,7 +56,6 @@ app.get('/Client/:idquestion', function(req, res) {
 	request(options, function (err, httpResponse, body) {
 		var stringQuestion;
 		if(httpResponse.statusCode == 204) {
-			console.log(204);
 			var stringReponse = "Pas de réponse pour le moment !";
 			res.render('ConsultQuestion.ejs', {question: "", reponse: stringReponse});
 		}
@@ -110,9 +109,6 @@ app.post('/SystemeExpert/Envoi', function(req, res) {
 	var data = { answer: req.body.answer };
 	if(req.body.submitno != null)
 		data = { answer: "Pas de réponse connue" };
-		
-	console.log(data);
-	console.log(req.body.urlQuestion);
 	
 	var options = {
 		method: 'post',
