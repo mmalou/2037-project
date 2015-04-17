@@ -86,7 +86,7 @@ app.get('/SystemeExpert/clean', function(req, res) {
 app.get('/SystemeExpert', function(req, res) {
 	var options = {
 		method: 'get',
-		url:path+'/questions/last'
+		url:path+'/questions/'
 	};
 	
 	request(options, function (err, httpResponse, body) {

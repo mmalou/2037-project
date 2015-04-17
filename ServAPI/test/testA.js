@@ -46,7 +46,7 @@ describe('Tests Acceptations', function(){
 	// Récuperation derniere question si il y en a
 	it('Should return StatusCode 200 when asking for an existing last question', function (done) {
 		request(app)
-			.get('/questions/last')
+			.get('/questions/')
 			.expect(200)
 			.end(function (error, res) {
 				var regex = "\/questions\/[a-zA-Z0-9]*";
@@ -103,7 +103,7 @@ describe('Tests Acceptations', function(){
 	// Récuperation derniere question si il n'y en a pas
 	it('Should return StatusCode 204 when asking for a non-existing last question', function (done) {
 		request(app)
-			.get('/questions/last')
+			.get('/questions/')
 			.expect(204)
 			.end(function (error) {
 				if(error) throw error;
